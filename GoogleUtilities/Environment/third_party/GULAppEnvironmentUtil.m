@@ -225,11 +225,26 @@ static BOOL HasEmbeddedMobileProvision() {
   return [UIDevice currentDevice].systemVersion;
 #elif TARGET_OS_OSX || TARGET_OS_TV || TARGET_OS_WATCH
   // Assemble the systemVersion, excluding the patch version if it's 0.
-  NSOperatingSystemVersion osVersion = [NSProcessInfo processInfo].operatingSystemVersion;
-  NSMutableString *versionString = [[NSMutableString alloc]
-      initWithFormat:@"%ld.%ld", (long)osVersion.majorVersion, (long)osVersion.minorVersion];
-  if (osVersion.patchVersion != 0) {
-    [versionString appendFormat:@".%ld", (long)osVersion.patchVersion];
+
+  NSInteger majorVersion = 0;
+  NSInteger minorVersion = 0;
+  NSInteger patchVersion = 0;
+  if (@available(macOS 10.10, *))
+  {
+  	NSOperatingSystemVersion osVersion = [NSProcessInfo processInfo].operatingSystemVersion;
+  	majorVersion = osVersion.majorVersion;
+  	minorVersion = osVersion.minorVersion;
+  	patchVersion = osVersion.patchVersion;
+  }
+  else
+  {
+	Gestalt(gestaltSystemVersionMajor, &majorVersion);
+	Gestalt(gestaltSystemVersionMinor, &minorVersion);
+	Gestalt(gestaltSystemVersionBugFix, &patchVersion);
+  }
+  NSMutableString *versionString = [[NSMutableString alloc] initWithFormat:@"%ld.%ld", (long)majorVersion, (long)minorVersion];
+  if (patchVersion != 0) {
+	[versionString appendFormat:@".%ld", (long)patchVersion];
   }
   return versionString;
 #endif

@@ -34,10 +34,11 @@ Status Filesystem::ExcludeFromBackups(const Path& dir) {
   if (![dir_url setResourceValue:@YES
                           forKey:NSURLIsExcludedFromBackupKey
                            error:&error]) {
-    return Status{
-        Error::kErrorInternal,
-        "Failed to mark persistence directory as excluded from backups"}
-        .CausedBy(Status::FromNSError(error));
+                           NSLog(@"Directory - %@, error - %@", dir_url, error);
+//    return Status{
+//        Error::kErrorInternal,
+//        "Failed to mark persistence directory as excluded from backups"}
+//        .CausedBy(Status::FromNSError(error));
   }
 
   return Status::OK();

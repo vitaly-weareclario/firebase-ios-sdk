@@ -190,7 +190,7 @@ NS_ASSUME_NONNULL_BEGIN
   if (!collectionPath) {
     ThrowInvalidArgument("Collection path cannot be nil.");
   }
-  if ([collectionPath containsString:@"//"]) {
+  if ([collectionPath rangeOfString:@"//"].location != NSNotFound) {
     ThrowInvalidArgument("Invalid path (%s). Paths must not contain // in them.", collectionPath);
   }
 
@@ -202,7 +202,7 @@ NS_ASSUME_NONNULL_BEGIN
   if (!documentPath) {
     ThrowInvalidArgument("Document path cannot be nil.");
   }
-  if ([documentPath containsString:@"//"]) {
+  if ([documentPath rangeOfString:@"//"].location != NSNotFound) {
     ThrowInvalidArgument("Invalid path (%s). Paths must not contain // in them.", documentPath);
   }
 
@@ -214,7 +214,7 @@ NS_ASSUME_NONNULL_BEGIN
   if (!collectionID) {
     ThrowInvalidArgument("Collection ID cannot be nil.");
   }
-  if ([collectionID containsString:@"/"]) {
+  if ([collectionID rangeOfString:@"/"].location != NSNotFound) {
     ThrowInvalidArgument("Invalid collection ID (%s). Collection IDs must not contain / in them.",
                          collectionID);
   }
